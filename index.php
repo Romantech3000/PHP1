@@ -284,6 +284,7 @@
     5. *Используя только две переменные, поменяйте их значение местами. Например, если a = 1, b = 2, надо, чтобы получилось b = 1, a = 2.
     Дополнительные переменные использовать нельзя.
 </p>
+<p class="code-title">Код:</p>
 <pre>
     $a = 1;
     $b = 2;
@@ -291,6 +292,66 @@
     $b = $a - $b;
     $a -= $b;
 </pre>
+<p>Результат:</p>
+<p class="res">
+    <?
+        $a = 1;
+        $b = 2;
+        $a += $b;
+        $b = $a - $b;
+        $a -= $b;
+        echo "a = {$a} <br>";
+        echo "b = {$b} <br>";
+    ?>
+</p>
+<p class="code-title">Код:</p>
+<pre>
+    //bitwise
+    $a = 1;
+    $b = 2;
+    $a ^= $b;
+    $b = $a ^ $b;
+    $a ^= $b;
+    echo "a = {$a}";
+    echo "b = {$b}";
+</pre>
+<p>Результат:</p>
+<p class="res">
+<?
+    //bitwise
+    $a = 1;
+    $b = 2;
+    $a ^= $b;
+    $b = $a ^ $b;
+    $a ^= $b;
+    echo "a = {$a} <br>";
+    echo "b = {$b} <br>";
+?>
+</p>
+
+<p class="code-title">Код:</p>
+<pre>
+    //bitwise 1-liner
+    $a = 1;
+    $b = 2;
+    $a = ($a ^ $b) ^ ($b ^= $a ^ $b);
+    echo "a = {$a}";
+    echo "b = {$b}";
+</pre>
+<p>Результат:</p>
+<p class="res">
+    <?
+    $a = 1;
+    $b = 2;
+    $a = ($a ^ $b) ^ ($b ^= $a ^ $b); //inventing a wheel of my own
+    //found this one online:
+    //$a^=$b^=$a^=$b;//(a gets assigned (a+b), then b is assigned the (a+b)-b, i.e. b = original a, then a=(a+b)-a i.e. b)
+    // too many weird assignments. mine looks clearer imo
+    echo "a = {$a} <br>";
+    echo "b = {$b} <br>";
+    ?>
+</p>
+
 <p class="task">6. Задание 4 сделать 3-я способами, как в лекции в конце.</p>
 <p><a href="site01.php">Вариант с активным шаблоном</a></p>
 <p><a href="site02.php">Вариант с вынесенным в отдельный файл кодом</a></p>
