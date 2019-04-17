@@ -1,0 +1,70 @@
+html,
+body {
+  margin: 0;
+  min-height: 100%; }
+
+.container {
+  max-width: 1140px;
+  margin: 0 auto; }
+
+.main-menu {
+  list-style: none;
+  display: flex;
+  margin: 0; }
+  .main-menu__top-li {
+    margin: 0 10px; }
+  .main-menu ul {
+    list-style: none;
+    padding: 0; }
+  .main-menu a {
+    display: block;
+    text-decoration: none;
+    padding: 10px 12px;
+    box-sizing: border-box;
+    color: #402030;
+    white-space: nowrap; }
+    .main-menu a:hover {
+      background-color: #402030;
+      color: #fff; }
+  .main-menu li {
+    position: relative;
+    display: block; }
+  .main-menu li ul {
+    position: absolute;
+    padding: 0;
+    background-color: #fff;
+    display: none; }
+  .main-menu li:hover ul {
+    display: block;
+    z-index: 1000;
+    box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.2); }
+
+nav {
+  border-bottom: 1px solid #402030;
+  border-top: 1px solid #402030; }
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  min-height: 80px;
+  background-color: #555; }
+
+.task-heading {
+  border-radius: 5px;
+  padding: 12px 18px;
+  color: #fff;
+  background-color: #402030; }
+
+.task-block {
+  border-radius: 5px;
+  border: 1px solid #402030;
+  padding: 12px; }
+
+/*# sourceMappingURL=styles.css.map */
