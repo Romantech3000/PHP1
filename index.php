@@ -3,28 +3,34 @@
 define('TEMPLATES_DIR', 'views/');
 define('LAYOUTS_DIR', 'layouts/');
 
+define('TASKS_NUMBER', 11);
+
 // main menu
+
+set_time_limit(10); // since using some (potentially) endless loops
 
 $menuArray = [
     [
         "name" => "Задания","href" => "#",
-        "submenu" => [
-            ['id' => '1', 'href' => '?page=task1', 'name' => 'Задание 1'],
-            ['id' => '2', 'href' => '?page=task2', 'name' => 'Задание 2'],
-            ['id' => '3', 'href' => '?page=task3', 'name' => 'Задание 3'],
-            ['id' => '4', 'href' => '?page=task4', 'name' => 'Задание 4'],
-            ['id' => '5', 'href' => '?page=task5', 'name' => 'Задание 5'],
-            ['id' => '6', 'href' => '?page=task6', 'name' => 'Задание 6'],
-            ['id' => '7', 'href' => '?page=task7', 'name' => 'Задание 7'],
-            ['id' => '8', 'href' => '?page=task8', 'name' => 'Задание 8'],
-            ['id' => '9', 'href' => '?page=task9', 'name' => 'Задание 9']
-        ]
+        "submenu" => []
     ],
     [
         "name" => "Просто пункт","href" => "#"
     ]
 ];
 
+$menuArray[0]['submenu'] = genTasksArray(TASKS_NUMBER);
+
+//var_dump($menuArray['submenu']);
+
+function genTasksArray($tasksNum) {
+    $arr = [];
+
+    for ($i = 1; $i <= $tasksNum; $i++) {
+        $arr[] = ['id' => "" . $i, 'href' => "?page=task{$i}", 'name' => "Задание {$i}"];
+    }
+    return $arr;
+}
 
 $locations = [
     "Саратовская" => ["Аркадак", "Аткарск",  "Балаково", "Берзовский"],
@@ -75,7 +81,7 @@ if (substr($page, 0, 4) == 'task') {
 
 echo renderPage($template, ['title' => $title, 'menu' => makeMenu($menuArray)], $params);
 
-
+// Looks quite messy in argument passing part. PhpStorm doesn't like it and neither do I
 function renderPage($template, $pageParams, $params = []) {
     extract($pageParams);
     $content = renderTemplate($template, $params);
@@ -83,11 +89,11 @@ function renderPage($template, $pageParams, $params = []) {
         'layout', ['content' => $content, 'title' => $title, 'menu' => $menu]);
 }
 
-function renderTemplate($page, $params=[]) {
+function renderTemplate($template, $params=[]) {
     ob_start();
     if (!is_null($params)) extract($params);
 
-    $fileName = TEMPLATES_DIR . $page . '.php';
+    $fileName = TEMPLATES_DIR . $template . '.php';
 
     if (file_exists($fileName)) {
         include $fileName;
@@ -214,10 +220,12 @@ function task8() {
     foreach ($locations as $region => $places) {
         echo "{$region} область:<br>";
         $numElems = count($places);
+        $isFirstItem = true;
         foreach ($places as $idx => $town) {
             if (mb_substr($town, 0, 1) == "К") {
+                if (!$isFirstItem) echo ", ";
                 echo "{$town}";
-                if ($idx < $numElems - 1) echo ", ";
+                $isFirstItem = false;
             }
         }
         echo "<br><br>";
@@ -239,6 +247,45 @@ function task9() {
     echo replaceSpacesMB(transliterate($str1, $alphabet)), '<br><br>';
     echo $str2, '<br>';
     echo transliterate(replaceSpacesMB($str2), $alphabet), '<br><br>';
+
+    return ob_get_clean();
+}
+
+
+function task10() {
+    ob_start();
+    $cellsNum = 0;
+    $numbers = [];
+
+    while ($cellsNum < 100) {
+
+        while (true) {
+            $newNum = rand(1, 200);
+            if (!in_array($newNum, $numbers)) {
+                $numbers[] = $newNum;
+                $cellsNum++;
+                break;
+            }
+        }
+    }
+
+    echo json_encode($numbers, JSON_PRETTY_PRINT), '<br>';
+
+    return ob_get_clean();
+}
+
+function task11() {
+    $A = [1, 2, 3, 4, 5, 0, 0, 0, 0, 0];
+
+    ob_start();
+    echo json_encode($A, JSON_PRETTY_PRINT), '<br>';
+    //$A = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5]
+    for ($i = 4; $i >= 0; $i--) {
+        $A [$i+$i] = $A [$i];
+        $A [$i+$i+1] = $A [$i];
+    }
+
+    echo json_encode($A, JSON_PRETTY_PRINT), '<br>';
 
     return ob_get_clean();
 }
