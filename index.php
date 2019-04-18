@@ -16,6 +16,19 @@ $menuArray = [
     ],
     [
         "name" => "Просто пункт","href" => "#"
+    ],
+    [
+        "name" => "Подменю 1","href" => "#",
+        "submenu" => [
+            [
+                "name" => "Подменю 2","href" => "#",
+                "submenu" => [
+                    ['id' => "1", 'href' => "?page=task 1", 'name' => "Задание 1"],
+                    ['id' => "2", 'href' => "?page=task 2", 'name' => "Задание 2"],
+                    ['id' => "3", 'href' => "?page=task 3", 'name' => "Задание 3"]
+                ]
+            ]
+        ]
     ]
 ];
 

@@ -29,12 +29,13 @@ body {
   .main-menu li {
     position: relative;
     display: block; }
-  .main-menu li ul {
+  .main-menu li > ul {
     position: absolute;
+    left: 10px;
     padding: 0;
     background-color: #fff;
     display: none; }
-  .main-menu li:hover ul {
+  .main-menu li:hover > ul {
     display: block;
     z-index: 1000;
     box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.2); }
