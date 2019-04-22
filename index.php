@@ -7,7 +7,6 @@ define ('TMB_DIR', 'thumbnails/');
 
 define('TMB_SIZE', 200);
 
-// main menu
 set_time_limit(10);
 
 
@@ -53,9 +52,11 @@ function names2imgs($name) {
 
 $layoutParams = [];
 $templateParams = [];
+$menu = renderTemplate('menu');
+
 switch ($page) {
     case 'index':
-        $layoutParams = ['title' => 'Главная'];
+        $layoutParams = ['title' => 'Главная', 'menu' => $menu];
         $template = 'index';
         break;
     case 'gallery':
@@ -111,7 +112,7 @@ switch ($page) {
 
         $imgNames = getImageList(TMB_DIR);
 
-        $layoutParams = ['title' => 'Image Gallery'];
+        $layoutParams = ['title' => 'Image Gallery', 'menu' => $menu];
         $templateParams = ['images' => array_map('names2imgs', $imgNames)];
         $template = 'gallery';
         break;

@@ -15,7 +15,7 @@
 
 </header>
 <nav>
-    <?=$menu?>
+    <div class="container"><?=$menu?></div>
 </nav>
 <main>
     <div class="container">
