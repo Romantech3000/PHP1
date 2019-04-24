@@ -15,7 +15,9 @@
         <button class="file-form__btn" type="submit" name="upload">загрузить</button>
     </form>
 </div>
-
+<? if ($message !== ''): ?>
+<div class="message"><?=$message?></div>
+<? endif; ?>
 <script>
     let selFileEl = document.querySelector('#file-name');
     selFileEl.addEventListener('change', () => {
