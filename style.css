@@ -1,0 +1,22 @@
+.container {
+  margin: 0 auto;
+  max-width: 1140px; }
+
+.header,
+.footer {
+  background-color: #323;
+  color: #fff;
+  min-height: 100px;
+  padding: 1px 0; }
+
+.copy {
+  margin-top: 40px;
+  font-size: smaller;
+  text-align: center; }
+
+.tasks {
+  padding: 10px;
+  background-color: #eae5ea;
+  margin: 20px 0; }
+
+/*# sourceMappingURL=style.css.map */
