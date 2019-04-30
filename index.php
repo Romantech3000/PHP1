@@ -64,16 +64,10 @@ switch ($a) {
         echo 'Error: the number is out of range';
 }
 
-// "сделайте через цикл if". "цикл if" - что бы это значило?.
+
 echo "<br>*<br>";
 
-// т.к. while и for использовать нельзя, использую goto:
-begin:
-echo $a++, '&nbsp;';
-if ($a <= 15) goto begin;
-
-
-//echo "<br><hr><h2>Задание 3</h2>";
+//Задание 3
 
 function add($a, $b) {
     return $a + $b;
@@ -175,4 +169,8 @@ function renderTemplate($template, $content = "", $title = "") {
 $mainContent = renderTemplate("tasks", $tasksContent);
 
 $title = "Main Page";
-echo renderTemplate("layout", $mainContent, $title);
+//echo renderTemplate("layout", $mainContent, $title); //active template
+
+// task 5
+$tmpl = file_get_contents('layout_passive.tmpl');
+echo str_replace(['{{TITLE}}', '{{CONTENT}}', '{{FOOTER}}'], [$title, $mainContent, date("Y")], $tmpl);
