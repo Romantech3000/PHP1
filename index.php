@@ -3,19 +3,17 @@
 define('TEMPLATES_DIR', 'views/');
 define('LAYOUTS_DIR', 'layouts/');
 
-define('TASKS_NUMBER', 11);
-
-// main menu
+define('TASKS_NUMBER', 10);
 
 set_time_limit(10); // since using some (potentially) endless loops
 
 $menuArray = [
     [
-        "name" => "Задания","href" => "#",
-        "submenu" => []
+        "name" => "Главная","href" => "/"
     ],
     [
-        "name" => "Просто пункт","href" => "#"
+        "name" => "Задания","href" => "#",
+        "submenu" => []
     ],
     [
         "name" => "Подменю 1","href" => "#",
@@ -32,7 +30,9 @@ $menuArray = [
     ]
 ];
 
-$menuArray[0]['submenu'] = genTasksArray(TASKS_NUMBER);
+
+// main menu
+$menuArray[1]['submenu'] = genTasksArray(TASKS_NUMBER);
 
 //var_dump($menuArray['submenu']);
 
@@ -45,6 +45,7 @@ function genTasksArray($tasksNum) {
     return $arr;
 }
 
+// regions and associated towns
 $locations = [
     "Саратовская" => ["Аркадак", "Аткарск",  "Балаково", "Берзовский"],
     "Свердловская" => ["Артёмовский", "Асбест"],
@@ -55,6 +56,9 @@ $locations = [
     "Ленинградская" => ["Кингисепп", "Кириши", "Коммунар", "Лодейное Поле", "Луга"]
 ];
 
+
+
+// letters match array for the transliteration task
 $alphabet = [
     'а' => 'a',   'б' => 'b',   'в' => 'v',
     'г' => 'g',   'д' => 'd',   'е' => 'e',
@@ -74,27 +78,56 @@ else $page = 'index';
 
 $params = [];
 $title = 'Default Page';
+$code = '';
 
+// using the same task content template for all task pages
 if (substr($page, 0, 4) == 'task') {
     $template = 'task';
     $title = 'Задание ' . substr($page, 4);
 
+    // get current task function output and its code
     if (function_exists($page)) {
         $content = $page();
+        $code = getFuncBody($page);
+        switch ($page) {
+            case 'task3':
+                $code .= '<br>locations<br>'.json_encode($locations, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+                break;
+            case 'task4':
+                $code .= '<br><br>'.getFuncBody('transliterate', true);
+                $code .= '<br>alphabet<br>'.json_encode($alphabet, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+                break;
+            case 'task5':
+                $code .= '<br><br>'.getFuncBody('replaceSpaces', true);
+                $code .= '<br><br>'.getFuncBody('replaceSpacesMB', true);
+                break;
+            case 'task6':
+                $code .= '<br><br>'.getFuncBody('makeMenu', true);
+                $code .= '<br>menuArray<br>'.json_encode($menuArray, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+                break;
+            case 'task9':
+                $code .= '<br><br>'.getFuncBody('transliterate', true);
+                $code .= '<br><br>'.getFuncBody('replaceSpacesMB', true);
+                $code .= '<br>alphabet<br>'.json_encode($alphabet, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+                break;
+            default:
+        }
     } else {
         $content = $page . ' Error: Task solution is not found';
     }
     $params = [
         'content' => $content,
-        'title' => $title
+        'title' => $title,
+        'code' => $code
     ];
 } else {
+    // use the default template for the rest of the pages
     $template = 'default';
 }
 
 echo renderPage($template, ['title' => $title, 'menu' => makeMenu($menuArray)], $params);
 
-// Looks quite messy in argument passing part. PhpStorm doesn't like it and neither do I
+// Looks quite messy in argument passing part. PhpStorm doesn't like it
 function renderPage($template, $pageParams, $params = []) {
     extract($pageParams);
     $content = renderTemplate($template, $params);
@@ -118,11 +151,33 @@ function renderTemplate($template, $params=[]) {
 }
 
 
-//echo "<br><h1 id='top'>Урок 3. ДЗ</h1>";
+
+// used to get task functions code for the task pages content
+// based on SO answer on how to get function code
+function getFuncBody($funcName, $whole = false) {
+    if ($whole) {
+        $startOffset = -1;
+        $endOffset = 0;
+    } else {
+        $startOffset = 1; // skip the name and ob_start()
+        $endOffset = -2; // skip ob_get and closing bracket
+    }
+    $func = new ReflectionFunction($funcName);
+    $filename = $func->getFileName();
+    $startLine = $func->getStartLine() + $startOffset;
+    $endLine = $func->getEndLine() + $endOffset;
+    $length = $endLine - $startLine;
+
+    $source = file($filename);
+    $body = implode("", array_slice($source, $startLine, $length));
+    return htmlentities($body);
+}
+
+
+// task 1
 
 function task1() {
     ob_start();
-
     $i = 0;
     while ($i < 101) {
         if (!($i % 3)) echo $i."&nbsp;";
@@ -131,6 +186,8 @@ function task1() {
 
     return ob_get_clean();
 }
+
+// task 2
 
 function task2() {
     ob_start();
@@ -143,18 +200,15 @@ function task2() {
     return ob_get_clean();
 }
 
-
+// task 3
 
 function task3() {
-    global $locations;
-    ob_start();
+    global $locations; ob_start();
 
     foreach ($locations as $region => $places) {
         echo "{$region} область:<br>";
-        $numElems = count($places);
-        foreach ($places as $idx => $town) {
-            echo "{$town}";
-            if ($idx < $numElems - 1) echo ", ";
+        if (count($places)) {
+            echo implode(", ", $places) . '.';
         }
         echo "<br><br>";
     }
@@ -163,7 +217,7 @@ function task3() {
 }
 
 
-
+// task 4
 
 function transliterate($str, $alphabet) {
     $strArr = preg_split('//u', $str, NULL, PREG_SPLIT_NO_EMPTY);
@@ -193,7 +247,7 @@ function task4() {
 }
 
 
-
+// task 5
 
 function replaceSpaces($str) {
     return str_replace(' ','_', $str);
@@ -211,6 +265,7 @@ function task5() {
     return ob_get_clean();
 }
 
+// task 6
 
 function task6() {
     ob_start();
@@ -218,12 +273,15 @@ function task6() {
     return ob_get_clean();
 }
 
+// task 7
+
 function task7() {
     ob_start();
         for ($i = 0; $i <= 9; print($i++."&nbsp;")) {}
     return ob_get_clean();
 }
 
+// task 8
 
 function task8() {
     ob_start();
@@ -234,19 +292,23 @@ function task8() {
         echo "{$region} область:<br>";
         $numElems = count($places);
         $isFirstItem = true;
+        $found = false;
         foreach ($places as $idx => $town) {
             if (mb_substr($town, 0, 1) == "К") {
                 if (!$isFirstItem) echo ", ";
                 echo "{$town}";
+                $found = true;
                 $isFirstItem = false;
             }
         }
-        echo "<br><br>";
+        if ($found) echo ".<br>";
+        echo "<br>";
     }
 
     return ob_get_clean();
 }
 
+// task 9
 
 function task9() {
     ob_start();
@@ -264,44 +326,30 @@ function task9() {
     return ob_get_clean();
 }
 
+// task 10
 
 function task10() {
     ob_start();
-    $cellsNum = 0;
-    $numbers = [];
-
-    while ($cellsNum < 100) {
-
-        while (true) {
-            $newNum = rand(1, 200);
-            if (!in_array($newNum, $numbers)) {
-                $numbers[] = $newNum;
-                $cellsNum++;
-                break;
+    echo '<div class="m-table">';
+    for ($i = 0; $i < 10; $i++) {
+        echo '<div class="m-table__row">';
+        for ($j = 0; $j < 10; $j ++) {
+            if ($i === 0) {
+                $val =  $j;
+            } elseif ($j === 0) {
+                $val = $i;
+            } else {
+                $val = $i * $j;
             }
+            echo '<span class="m-table__cell">' . $val . '</span>';
         }
+        echo "</div>";
     }
-
-    echo json_encode($numbers, JSON_PRETTY_PRINT), '<br>';
+    echo '</div>';
 
     return ob_get_clean();
 }
 
-function task11() {
-    $A = [1, 2, 3, 4, 5, 0, 0, 0, 0, 0];
-
-    ob_start();
-    echo json_encode($A, JSON_PRETTY_PRINT), '<br>';
-    //$A = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5]
-    for ($i = 4; $i >= 0; $i--) {
-        $A [$i+$i] = $A [$i];
-        $A [$i+$i+1] = $A [$i];
-    }
-
-    echo json_encode($A, JSON_PRETTY_PRINT), '<br>';
-
-    return ob_get_clean();
-}
 
 //<li><a href="task1">Задание 1</a></li>
 function makeMenu($arr, $lvl = 0) {
@@ -310,7 +358,7 @@ function makeMenu($arr, $lvl = 0) {
     foreach ($arr as $item) {
         $content .= ($lvl == 0)? "<li class=\"main-menu__top-li\">" : "<li>";
         $content .= "<a href=\"{$item['href']}\">{$item['name']}</a>";
-        if (array_key_exists('submenu', $item)) {
+        if (array_key_exists('submenu', $item)) { //isset is faster and returns false if the value = NULL
             $content .= makeMenu($item['submenu'], $lvl+1);
         }
         $content .= "</li>";
