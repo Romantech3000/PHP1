@@ -5,7 +5,7 @@ function saveResizedImage($fileName, $newFileName, $newWidth = TMB_SIZE) {
     $image = new SimpleImage();
     $image->load($fileName);
     $image->resizeToWidth($newWidth);
-    $image->save($newFileName);
+    $image->save($newFileName); //by default everything is saved as a JPEG image regardless of the source file
 }
 
 function getImageList1($dir) {
@@ -64,4 +64,27 @@ function getUploadErrorMessage($messageCode) {
             $message = 'Ошибочное сообщение';
     };
     return $message;
+}
+
+function getNewLogName($logDir) {
+    $i = 0;
+    while (true) {
+        $fileName = ($i === 0) ? 'log.txt' : 'log'.$i.'.txt';
+        $i++;
+        if (!file_exists($logDir . $fileName)) return $logDir . $fileName;
+    }
+}
+
+
+function logData($data) {
+    $logName = LOG_DIR . 'log.txt';
+    if (file_exists($logName)) {
+        $numRecords = count(file($logName)); // number of lines in the log file. good enough for small logs
+        if ($numRecords > 9) {
+            $newName = getNewLogName(LOG_DIR);
+            rename($logName, $newName); // what if another user just caused the renaming at the same time?
+        }
+    }
+    $logFile = fopen($logName, 'a');
+    fwrite($logFile, $data . PHP_EOL);
 }

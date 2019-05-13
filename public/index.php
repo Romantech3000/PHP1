@@ -10,9 +10,16 @@ if (isset($_GET['page'])) {
 }
 
 
+
+logData(date('Y-m-d H:i:s ') . $_SERVER['REQUEST_URI'] . ' | ' . $_SERVER['HTTP_USER_AGENT']);
+
 $layoutParams = [];
 $templateParams = [];
 $menu = renderTemplate('menu');
+
+
+
+
 
 switch ($page) {
     case 'index':

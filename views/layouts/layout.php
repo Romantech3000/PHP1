@@ -11,17 +11,20 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-<header>
+<div class="top-wrapper">
+    <header class="header">
+        <h2>PHP1. Lesson 4 Homework</h2>
+    </header>
+    <nav>
+        <div class="container"><?=$menu?></div>
+    </nav>
+    <main>
+        <div class="container">
+            <?=$content?>
+        </div>
+    </main>
+</div>
 
-</header>
-<nav>
-    <div class="container"><?=$menu?></div>
-</nav>
-<main>
-    <div class="container">
-        <?=$content?>
-    </div>
-</main>
 <footer class="footer">
     <p class="copy">
         &copy;2000-<?=date("Y")?>

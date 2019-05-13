@@ -4,6 +4,7 @@ define('TEMPLATES_DIR', '../views/');
 define('LAYOUTS_DIR', 'layouts/');
 define ('IMG_DIR', 'images/');
 define ('TMB_DIR', 'thumbnails/');
+define ('LOG_DIR', '../logs/');
 
 define('TMB_SIZE', 200);
 
