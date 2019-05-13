@@ -2,3 +2,28 @@
 ===============================
 
 Homework repo
+
+Lesson 4 Homework
+
+v0.95
+Gallery images can be opened in a new window/tab or in a "modal window" (Vanilla JS + CSS)
+Logs user visit time/URL/agent (new log directory outside public zone ofc). Every 10 log records a new log-file is created.
+
+Engine ".9" (vs v .5)
+1. refactoring:
+directory tree structure changed and code divided into pieces to be more "engine"-like
+WWW root is now in public/ directory.
+2. messages added to the gallery template. Some errors still aren't  properly handled. 
+Might need to gather and  process them before setting new headers.
+
+Large images are still get opened in a new window/tab.
+
+Engine ".5" (not many files atm)
+Gallery:
+- supportss JPEG and PNG uploads 
+- resized images saved as JPEG's due to a bug in the class - considered not a problem
+- original uploads copied into uploads/ folder
+
+Resized images for the gallery:
+- "large" (resized to max width = 1024px atm) images stored in images/ folder 
+- thumbnails max width = 200px, thumbnails/ folder
